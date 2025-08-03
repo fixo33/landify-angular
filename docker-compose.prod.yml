@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Aplicación Angular para producción
+  landify-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: landify-app-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - landify-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./logs/nginx:/var/log/nginx
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+networks:
+  landify-network:
+    driver: bridge
+
+volumes:
+  nginx-logs:
+    driver: local 

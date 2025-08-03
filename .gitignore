@@ -1,0 +1,63 @@
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de configuración local
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Archivos de build
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Archivos de cobertura de pruebas
+/coverage
+/.nyc_output
+
+# Archivos de IDE y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Archivos de cache
+.cache/
+.parcel-cache/
+
+# Cache de Angular CLI
+.angular/
+
+# Archivos de documentación
+doc/
+
+# Archivos de configuración local
+angular.json.bak
+package-lock.json.bak
+
+# Archivos de respaldo
+*.bak
+*.backup
+
+# Archivos de configuración de entorno
+src/environments/environment.local.ts
+src/environments/environment.development.ts
+

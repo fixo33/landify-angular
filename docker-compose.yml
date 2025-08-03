@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # Aplicación Angular
+  landify-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: landify-app
+    restart: unless-stopped
+    networks:
+      - landify-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./logs/nginx:/var/log/nginx
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.landify.rule=Host(`landify.localhost`)"
+      - "traefik.http.services.landify.loadbalancer.server.port=80"
+
+  # Nginx Reverse Proxy (opcional)
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: landify-nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx-proxy:/var/log/nginx
+    depends_on:
+      - landify-app
+    networks:
+      - landify-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  landify-network:
+    driver: bridge
+
+volumes:
+  nginx-logs:
+    driver: local 
